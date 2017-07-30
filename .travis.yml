@@ -1,0 +1,24 @@
+language: python
+
+python:
+   - 3.4
+   - 3.5
+   - 3.6
+   - nightly
+
+matrix:
+  allow_failures:
+    - python: nightly
+
+cache: pip
+
+git:
+  depth: 1
+
+install:
+   - pip install .
+   - pip install pytest pytest-xdist flake8 flake8-isort --upgrade
+
+script:
+   - flake8
+   - pytest . -n auto
