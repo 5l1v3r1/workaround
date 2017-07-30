@@ -1,6 +1,6 @@
 from collections import namedtuple
 
-WorkaroundBase = namedtuple('WorkaroundBase', ['handler', 'match', 'path', 'context', 'line'])
+WorkaroundBase = namedtuple('WorkaroundBase', ['match', 'path', 'context', 'line'])
 
 
 class Workaround(WorkaroundBase):

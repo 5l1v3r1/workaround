@@ -16,9 +16,9 @@ git:
   depth: 1
 
 install:
-   - pip install .
-   - pip install pytest pytest-xdist flake8 flake8-isort --upgrade
+   - pip install . --upgrade
+   - pip install pytest pytest-xdist flake8-isort responses pytest-flake8 setuptools_scm --upgrade
 
 script:
-   - flake8
-   - pytest . -n auto
+   - python setup.py test
+   - workaround tests/test_files/

@@ -2,10 +2,7 @@ import re
 from itertools import product
 from typing import (
     Dict,
-    Iterable,
-    Pattern,
     Tuple,
-    Union,
 )
 
 from .. import Workaround
@@ -13,13 +10,17 @@ from .. import Workaround
 
 class BaseHandler:
     adjectives = set()
-    value_patterns: Iterable[Union[Pattern, str]] = []
+    value_patterns = []  # Iterable[Union[Pattern, str]]
 
-    example_values: Iterable[str] = []
+    example_values = []  # Iterable[str]
 
-    @property
-    def examples(self):
-        return list(product(self.example_values, self.adjectives))
+    @classmethod
+    def examples(cls):
+        return list(product(cls.example_values, cls.adjectives))
+
+    @classmethod
+    def is_result_equal(cls, result, adjective):
+        return result == adjective
 
     def can_handle(self, value, adjective):
         return self.can_handle_adjective(adjective) and self.can_handle_value(value)
@@ -29,10 +30,6 @@ class BaseHandler:
 
     def can_handle_value(self, value):
         return any(re.match(pattern, value) for pattern in self.value_patterns)
-
-    @classmethod
-    def is_result_equal(cls, result, adjective):
-        return result == adjective
 
     def handle(self, workaround: Workaround) -> Tuple[bool, str]:
         parsed_value = self.extract_info_from_value(workaround.value)

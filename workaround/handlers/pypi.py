@@ -8,26 +8,24 @@ from .base import (
     Workaround,
 )
 
-PYPI_URL = 'https://pypi.python.org/pypi/{package}/json'
 
-
-class Handler(BaseHandler):
+class PyPiHandler(BaseHandler):
     adjectives = {'released'}
-
     value_patterns = [
-        'pypi:(?P<value>.*)'
+        r'^pypi:(?P<value>.*)'
     ]
-
     example_values = [
         'pypi:Django>=2.0',
-        'pypi:colorama~=3.4'
+        'pypi:colorama~=3.4',
     ]
 
-    def get_result(self, workaround: Workaround, parsed_value):
-        requirement = Requirement(parsed_value['value'])
-        package_name = canonicalize_name(requirement.name)
+    PYPI_URL = 'https://pypi.python.org/pypi/{package}/json'
 
-        pypi_response = requests.get(PYPI_URL.format(package=package_name)).json()
+    def get_result(self, workaround: Workaround, parsed_value):
+        parsed_value = Requirement(parsed_value['value'])
+        package_name = canonicalize_name(parsed_value.name)
+
+        pypi_response = requests.get(self.PYPI_URL.format(package=package_name)).json()
         releases = list(parse(v) for v in pypi_response['releases'].keys())
 
-        return 'released' if any(requirement.specifier.filter(releases)) else 'unreleased'
+        return 'released' if any(parsed_value.specifier.filter(releases)) else 'unreleased'

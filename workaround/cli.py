@@ -25,7 +25,7 @@ def run():
     if options['--examples']:
         for name, examples in get_examples():
             print(name + ':')
-            for adverb, value, adj in examples:
+            for adverb, (value, adj) in examples:
                 print('   - {adverb} {value} is {adj}'.format(
                     adverb=adverb,
                     value=colored(value, 'red'),

@@ -9,16 +9,13 @@ from .base import (
 def get_ticket_state(ticket_id):
     response = requests.get('https://code.djangoproject.com/jsonrpc',
                             json={'method': 'ticket.get', 'params': [ticket_id]})
-    try:
-        response.raise_for_status()
-    except requests.HTTPError as e:
-        return 'Error: {0}'.format(e)
+    response.raise_for_status()
 
     ticket_json = response.json()['result'][3]
     return ticket_json['resolution'], ticket_json['status']
 
 
-class Handler(BaseHandler):
+class DjangoHandler(BaseHandler):
     adjectives = {'closed', 'fixed'}
     value_patterns = [
         r'dj(ango)?:(?P<ticket_id>\d+)',
